@@ -6,7 +6,7 @@ class ArticuloBO:
         #Conexión con la base de datos
         self.db = mysql.connector.connect(host ="localhost", 
                                      user = "root", 
-                                     password = "", 
+                                     password = "annyanneko", 
                                      db ="mydb")
 
     #destruccion del objeto
@@ -19,7 +19,7 @@ class ArticuloBO:
             if(self.validar(articulo)):
                 if(not self.exist(articulo)):  
                     #insertar el articulo
-                    insertSQL = "INSERT INTO articulo (`PK_ID_ART`, `Nombre`, `Cantidad`, `Descripcion`, `Precio`) VALUES (%s, %s, %s, %s, CURDATE())"
+                    insertSQL = "INSERT INTO articulo (`PK_idarticulo`, `Nombre`, `Cantidad`, `Descripcion`, `Precio`) VALUES (%s, %s, %s, %s, CURDATE())"
                     insertValores =  (articulo.PK_ID_ART.get(),articulo.Nombre_C.get(),articulo.Cantidad.get(),articulo.Descripcion.get(),articulo.Precio.get())
                     print(insertValores)
                     cursor = self.db.cursor() 
@@ -72,7 +72,7 @@ class ArticuloBO:
     def exist(self , articulo):
         try:
             existe = False
-            selectSQL = "Select * from articulo where PK_ID_ART = " + articulo.PK_ID_ART.get()
+            selectSQL = "Select * from articulo where PK_idarticulo = " + articulo.PK_ID_ART.get()
             cursor = self.db.cursor()
             cursor.execute(selectSQL)
             if (cursor.fetchone()) :
@@ -89,7 +89,7 @@ class ArticuloBO:
     #condulta datos
     def consultar(self):
         try:
-            selectSQL = "select PK_ID_ART as ID_ART, \
+            selectSQL = "select PK_idarticulo as articulo, \
                             Nombre, Descripcion, Cantidad, \
                             Precio \
                         from articulo" 
@@ -108,7 +108,7 @@ class ArticuloBO:
     #consulta al proveedor
     def consultarArticulo(self, articulo):
         try:
-            selectSQL = "Select * from articulo where PK_ID_ART = " + articulo.PK_ID_ART.get()
+            selectSQL = "Select * from articulo where PK_idarticulo = " + articulo.PK_ID_ART.get()
             cursor = self.db.cursor()
             cursor.execute(selectSQL)
             articuloDB = cursor.fetchone()
