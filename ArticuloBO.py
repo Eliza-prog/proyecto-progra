@@ -38,11 +38,15 @@ class ArticuloBO:
     def eliminar(self, articulo):
         try:
             #eliminar el articulo
-            deleteSQL = "delete from articulo where PK_ID_ART = " + articulo.PK_ID_ART.get()
+            deleteSQL = "delete from articulo where PK_idarticulo = " + articulo.PK_ID_ART.get()
             cursor = self.db.cursor() 
             cursor.execute(deleteSQL) 
             self.db.commit() 
         except mysql.connector.Error as e:
+            print("Something went wrong: {}".format(e))
+            if str(e) == "1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`mydb`.`conexion`, CONSTRAINT `FK_CONEXION_ARTICULO` FOREIGN KEY (`FK_idarticulo`) REFERENCES `articulo` (`PK_idarticulo`))":
+                raise Exception("Primero elimine los datos relacionados al articulo") 
+            else: 
                 raise Exception(str(e)) 
         except Exception as e:
             raise Exception(str(e))
