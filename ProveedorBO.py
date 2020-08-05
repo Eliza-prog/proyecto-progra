@@ -6,7 +6,7 @@ class ProveedorBO:
         #Conexión con la base de datos
         self.db = mysql.connector.connect(host ="localhost", 
                                      user = "root", 
-                                     password = "", 
+                                     password = "annyanneko", 
                                      db ="mydb")
 
     #destruccion del objeto
@@ -43,8 +43,12 @@ class ProveedorBO:
             cursor.execute(deleteSQL)
             self.db.commit() 
         except mysql.connector.Error as e:
-            raise Exception(str(e)) 
-        except Exception as e: 
+            print("Something went wrong: {}".format(e))
+            if str(e) == "1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`mydb`.`conexion`, CONSTRAINT `FK_CONEXION_PROVEEDOR` FOREIGN KEY (`FK_idproveedor`) REFERENCES `proveedor` (`PK_idproveedor`))":
+                raise Exception("Primero elimine los datos relacionados al proveedor") 
+            else: 
+                raise Exception(str(e)) 
+        except Exception as e:
             raise Exception(str(e))
     
     #modificar proveedor
