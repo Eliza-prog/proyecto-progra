@@ -26,6 +26,7 @@ class Directorio_P:
         mantmenu.add_command(label="Articulos", command=self.abrir_A)
         mantmenu.add_command(label="Clientes", command=self.abrir_C)
         mantmenu.add_command(label="Facturas", command=self.abrir_F)
+        mantmenu.add_command(label="Conexion", command=self.abrir_R)
 
         menubar.add_cascade(label="Archivo", menu=filemenu)
         menubar.add_cascade(label="Mantenimiento", menu=mantmenu)
@@ -120,7 +121,7 @@ class Directorio_P:
 
         #toda informacion
         self.cargarTodaInformacion()
-
+ 
         #cierre raiz
         self.raiz.mainloop()
     
@@ -205,6 +206,11 @@ class Directorio_P:
         from mant_Factura import Directorio_F
         self.raiz.destroy()
         Directorio_F()
+    
+    def abrir_R(self):
+        from mant_RelacionAP import Conexion_AP
+        self.raiz.destroy()
+        Conexion_AP()
 
         self.raiz.mainloop() 
        
