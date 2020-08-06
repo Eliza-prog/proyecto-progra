@@ -79,6 +79,7 @@ class Chat_C:
             self.cliente_socket.close() #se cierra la conexion 
             self.raiz.destroy() #se cierra la ventana del usuario 
 
+    # Cierre del cliente con llamado recursivo
     def cerrando(self, event=None):
         self.mns.set("{salir}") #setea el mensaje para que de forma recursiva se cierre
         self.enviar() #llama al metodo enviar
