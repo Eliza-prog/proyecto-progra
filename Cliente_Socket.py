@@ -14,7 +14,7 @@ class Chat_C:
         #Pantalla
         self.raiz = Tk()
         self.raiz.title ("Chat")
-        self.raiz.geometry('350x480') 
+        self.raiz.geometry('350x550') 
 
         #Fuente y Variables
         self.fuente = font.Font(weight="bold")
@@ -27,22 +27,22 @@ class Chat_C:
 
         #Titulo
         self.lb_tituloPantalla = Label(self.raiz, text = "CHAT CLIENTE - SERVIDOR", font = self.fuente)
-        self.lb_tituloPantalla.place(x = 60, y = 20)
+        self.lb_tituloPantalla.place(x = 60, y = 80)
 
         #Mensajes + Scrollbar
         self.Scr_vertical = Scrollbar(self.raiz)  
         self.lbx_mensajes = Listbox(self.raiz, height=20, width=50, yscrollcommand = self.Scr_vertical.set)  
-        self.lbx_mensajes.place(x = 20, y = 70) 
+        self.lbx_mensajes.place(x = 20, y = 130)
 
         self.Scr_vertical.config(command = self.lbx_mensajes.yview)
         self.Scr_vertical.pack(side = RIGHT, fill = Y)
 
         self.txt_mensaje = Entry(self.raiz, textvariable=self.mns, justify="center", width=50)
-        self.txt_mensaje.place(x = 20, y = 400)
+        self.txt_mensaje.place(x = 20, y = 470)
 
         #boton enviar
         self.bt_enviar = Button(self.raiz, text="Enviar", width=15, command = self.enviar)
-        self.bt_enviar.place(x = 110, y = 430)
+        self.bt_enviar.place(x = 110, y = 500)
 
         #tiempo
         self.lb_tiempo = Label(self.raiz, font=("bold", 20), text="00:00:00")
