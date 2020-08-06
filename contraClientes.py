@@ -45,9 +45,9 @@ class Main:
 
     def Acceder(self):
         if(self.user.get() == "Cliente" and self.pasw.get() == "p34"):
-            from Opc_cliente import Opc
+            from Cliente_Socket import Chat_C
             self.raiz.destroy()
-            Opc()
+            Chat_C()
         else:
             msg.showinfo("Error", "La contrasena o ususario es incorrecta") 
 
