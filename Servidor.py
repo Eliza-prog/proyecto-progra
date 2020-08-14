@@ -22,8 +22,18 @@ def cliente_en_llamada(client):  # Cliente como argulento / para un solo cliente
 
     while True: #conexion permanente con cliente especifico
         msg = client.recv(BYTES) #recive mensaje de cliente 
-        if msg != bytes("{salir}", "utf8"): #si no es {salir} envia el mensaje a los demas 
-            envio_masa(msg, nombre+": ") #envia mensaje 
+        if msg != bytes("{salir}", "utf8") and msg != bytes("{bloqueado}", "utf8") and msg != bytes("{desbloqueado}", "utf8"): #si no es {salir} envia el mensaje a los demas 
+            envio_masa(msg, nombre+": ") #envia mensaje  
+        elif msg == bytes("{bloqueado}", "utf8"): #si no es {salir} envia el mensaje a los demas
+            baneo = 'Cliente' #mensaje de bienvenida y aviso de salida 
+            client.send(bytes(baneo, "utf8")) #envia el mensaje al cliente en especifico 
+            Baneado = client.recv(BYTES).decode("utf8") 
+            envio_masa(bytes("%s ha sido bloqueado." % Baneado, "utf8")) #les avisa que el usuario o cliente dejo el chat  
+        elif msg == bytes("{desbloqueado}", "utf8"): #si no es {salir} envia el mensaje a los demas
+            baneo = 'Cliente' #mensaje de bienvenida y aviso de salida 
+            client.send(bytes(baneo, "utf8")) #envia el mensaje al cliente en especifico 
+            Baneado = client.recv(BYTES).decode("utf8") 
+            envio_masa(bytes("%s ha sido desbloqueado." % Baneado, "utf8")) #les avisa que el usuario o cliente dejo el chat 
         else: # de los contrario 
             client.send(bytes("{salir}", "utf8")) #mensaje al cliente: {salir}
             client.close() #cierra la conexion con ese usuario o cliente 
