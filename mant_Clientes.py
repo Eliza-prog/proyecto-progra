@@ -9,10 +9,19 @@ from tkcalendar import Calendar, DateEntry
 from Elementos import Cliente
 from Elementos import ClienteBO
 
+from reportlab.pdfgen import canvas as reportPDF
+from reportlab.pdfbase.pdfmetrics import registerFont
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.platypus import Table, TableStyle, Paragraph
+from reportlab.lib import colors
+
+#Importa para ejecutar un comando
+import subprocess
+
 class Directorio_C: 
 
     def __init__(self):
-
+ 
         #Pantalla
         self.raiz = Tk()
         self.raiz.title ("Mantenimiento de Clientes")
@@ -29,6 +38,7 @@ class Directorio_C:
         mantmenu.add_command(label="Facturas", command=self.abrir_F)
         mantmenu.add_command(label="Articulos", command=self.abrir_A)
         mantmenu.add_command(label="Proveedores", command=self.abrir_p)
+        mantmenu.add_command(label="Conexion", command=self.abrir_R)
 
         menubar.add_cascade(label="Archivo", menu=filemenu)
         menubar.add_cascade(label="Mantenimiento", menu=mantmenu)
@@ -116,6 +126,9 @@ class Directorio_C:
         self.bt_enviar = Button(self.raiz, text="Eliminar", width=15, command = self.eliminarInformacion)
         self.bt_enviar.place(x = 430, y = 340)
 
+        self.bt_reporte = Button(self.raiz, text="Reporte", width=15, command = self.generarPDFListado)
+        self.bt_reporte.place(x = 550, y = 340)
+
         #label del informacion
         self.lb_tituloPantalla = Label(self.raiz, text = "INFORMACIÓN INCLUIDA", font = self.fuente)
         self.lb_tituloPantalla.place(x = 190, y = 400)
@@ -152,6 +165,66 @@ class Directorio_C:
        
         #cierre de raiz
         self.raiz.mainloop()
+
+    def generarPDFListado(self):
+        try:
+            #Crea un objeto para la creación del PDF
+            nombreArchivo = "ListadoPersonas.pdf"
+            rep = reportPDF.Canvas(nombreArchivo)
+
+            #Agrega el tipo de fuente Arial
+            registerFont(TTFont('Arial','ARIAL.ttf'))
+            
+        
+            #Crea el texto en donde se incluye la información
+            textobject = rep.beginText()
+            # Coloca el titulo
+            textobject.setFont('Arial', 16)
+            textobject.setTextOrigin(10, 800)
+            textobject.setFillColor(colors.darkorange)
+            textobject.textLine(text='LISTA DE CLIENTES')
+            #Escribe el titulo en el reportes
+            rep.drawText(textobject)
+
+            #consultar la informacion de la base de datos
+            self.clienteBo = ClienteBO.ClienteBO() #se crea un objeto de logica de negocio
+            informacion = self.clienteBo.consultar()
+            #agrega los titulos de la tabla en la información consultada
+            titulos = ["Cédula", "Nombre", "Primer Ape.", "Segundo Ape.", "Fec. Nacimiento", "Direccion", "Observaciones", "Telefono 1", "Telefono 2"]
+            informacion.insert(0,titulos)
+            #crea el objeto tabla  para mostrar la información
+            t = Table(informacion)
+            #Le coloca el color tanto al borde de la tabla como de las celdas
+            t.setStyle(TableStyle([("BOX", (0, 0), (-1, -1), 0.25, colors.black),
+                                  ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black)]))
+
+            #para cambiar el color de las fichas de hace un ciclo según la cantidad de datos
+            #que devuelve la base de datos
+            data_len = len(informacion)
+            for each in range(data_len):
+                if each % 2 == 0:
+                    bg_color = colors.whitesmoke
+                else:
+                    bg_color = colors.lightgrey
+
+                if each == 0 : #Le aplica un estilo diferente a la tabla
+                    t.setStyle(TableStyle([('BACKGROUND', (0, each), (-1, each), colors.orange)]))
+                else:
+                    t.setStyle(TableStyle([('BACKGROUND', (0, each), (-1, each), bg_color)]))
+
+            #acomoda la tabla según el espacio requerido
+            aW = 840
+            aH = 780
+            w, h = t.wrap(aW, aH)
+            t.drawOn(rep, 10, aH-h)
+
+            #Guarda el archivo
+            rep.save()
+            #Abre el archivo desde comandos, puede variar en MacOs es open
+            #subprocess.Popen("open '%s'" % nombreArchivo, shell=True)
+            subprocess.Popen(nombreArchivo, shell=True) #Windows
+        except IOError:
+            msg.showerror("Error",  "El archivo ya se encuentra abierto")
 
     #calendario
     def mostrarDatePicker(self):
@@ -249,6 +322,11 @@ class Directorio_C:
         from mant_Proveedor import Directorio_P
         self.raiz.destroy()
         Directorio_P()
+    
+    def abrir_R(self):
+        from mant_RelacionAP import Conexion_AP
+        self.raiz.destroy()
+        Conexion_AP()
 
 def main():
     Directorio_C()
