@@ -57,7 +57,7 @@ class ArticuloBO:
             if(self.validar(articulo)):
                 if(self.exist(articulo)): 
                     #modifivca articulo
-                    updateSQL = "UPDATE articulo set `Nombre` = %s, `Cantidad` = %s, `Descrpcion` = %s, `Precio` = %s WHERE `PK_ID_ART` =  %s"
+                    updateSQL = "UPDATE articulo set `Nombre` = %s, `Cantidad` = %s, `Descripcion` = %s, `Precio` = %s WHERE `PK_idarticulo` =  %s"
                     updateValores =  (articulo.NOMBRE.get(),articulo.CANT_EXI.get(),articulo.DESCRIPCION.get(),articulo.PRECIO_UN.get(),articulo.PK_ID_ART.get())
                     print(updateValores)
                     cursor = self.db.cursor() 
