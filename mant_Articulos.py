@@ -7,13 +7,21 @@ from tksheet import Sheet
 from Elementos import Articulos
 from Elementos import ArticuloBO
 
+from reportlab.pdfgen import canvas as reportPDF
+from reportlab.pdfbase.pdfmetrics import registerFont
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.platypus import Table, TableStyle, Paragraph
+from reportlab.lib import colors
+
+import subprocess
+
 class Directorio_A: 
 
     def __init__(self):
         #Pantalla
         self.raiz = Tk()
         self.raiz.title ("Mantenimiento de Articulos")
-        self.raiz.geometry('600x520') 
+        self.raiz.geometry('680x520') 
 
         #Barra menu
         menubar = Menu(self.raiz)
@@ -34,6 +42,7 @@ class Directorio_A:
         #Objecto Articulo
         self.fuente = font.Font(weight="bold")
         self.articulo = Articulos.Articulo()
+        self.insertando = True
 
         #Titulo 
         self.lb_tituloPantalla = Label(self.raiz, text = "MANTENIMIENTO DE ARTICULOS", font = self.fuente)
@@ -87,6 +96,9 @@ class Directorio_A:
         self.bt_enviar = Button(self.raiz, text="Eliminar", width=15, command = self.eliminarInformacion)
         self.bt_enviar.place(x = 430, y = 220)
 
+        self.bt_reporte = Button(self.raiz, text="Reporte", width=15, command = self.generarPDFListado)
+        self.bt_reporte.place(x = 550, y = 340)
+
         #Se coloca un label del informacion
         self.lb_tituloPantalla = Label(self.raiz, text = "INFORMACIÓN INCLUIDA", font = self.fuente)
         self.lb_tituloPantalla.place(x = 190, y = 275)
@@ -124,6 +136,65 @@ class Directorio_A:
 
         self.raiz.mainloop()
 
+    def generarPDFListado(self):
+        try:
+            #Crea un objeto para la creación del PDF
+            nombreArchivo = "ListadoArticulos.pdf"
+            rep = reportPDF.Canvas(nombreArchivo)
+
+            #Agrega el tipo de fuente Arial
+            registerFont(TTFont('Arial','ARIAL.ttf'))
+            
+        
+            #Crea el texto en donde se incluye la información
+            textobject = rep.beginText()
+            # Coloca el titulo
+            textobject.setFont('Arial', 16)
+            textobject.setTextOrigin(10, 800)
+            textobject.setFillColor(colors.darkorange)
+            textobject.textLine(text='LISTA DE ARTICULOS')
+            #Escribe el titulo en el reportes
+            rep.drawText(textobject)
+
+            #consultar la informacion de la base de datos
+            self.articuloBo = ArticuloBO.ArticuloBO() #se crea un objeto de logica de negocio
+            informacion = self.articuloBo.consultar()
+            #agrega los titulos de la tabla en la información consultada
+            titulos = ["ID articulo", "Nombre del articulo", "Descripcion", "Cant.Existente", "Precio Unitario"]
+            informacion.insert(0,titulos)
+            #crea el objeto tabla  para mostrar la información
+            t = Table(informacion)
+            #Le coloca el color tanto al borde de la tabla como de las celdas
+            t.setStyle(TableStyle([("BOX", (0, 0), (-1, -1), 0.25, colors.black),
+                                  ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black)]))
+
+            #para cambiar el color de las fichas de hace un ciclo según la cantidad de datos
+            #que devuelve la base de datos
+            data_len = len(informacion)
+            for each in range(data_len):
+                if each % 2 == 0:
+                    bg_color = colors.whitesmoke
+                else:
+                    bg_color = colors.lightgrey
+
+                if each == 0 : #Le aplica un estilo diferente a la tabla
+                    t.setStyle(TableStyle([('BACKGROUND', (0, each), (-1, each), colors.orange)]))
+                else:
+                    t.setStyle(TableStyle([('BACKGROUND', (0, each), (-1, each), bg_color)]))
+
+            #acomoda la tabla según el espacio requerido
+            aW = 840
+            aH = 780
+            w, h = t.wrap(aW, aH)
+            t.drawOn(rep, 10, aH-h)
+
+            #Guarda el archivo
+            rep.save()
+            #Abre el archivo desde comandos, puede variar en MacOs es open
+            #subprocess.Popen("open '%s'" % nombreArchivo, shell=True)
+            subprocess.Popen(nombreArchivo, shell=True) #Windows
+        except IOError:
+            msg.showerror("Error",  "El archivo ya se encuentra abierto")
     #Limpiar
     def limpiarInformacion(self):
         self.articulo.limpiar()
@@ -134,7 +205,7 @@ class Directorio_A:
         try:
             self.articuloBo = ArticuloBO.ArticuloBO()
             if(self.insertando == True):
-                self.articuloBo.guardar(self.articuloBo)
+                self.articuloBo.guardar(self.articulo)
             else:
                 self.articuloBo.modificar(self.articulo)
             
