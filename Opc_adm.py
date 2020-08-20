@@ -10,7 +10,7 @@ class Opc:
         #Pantalla
         self.raiz = Tk()
         self.raiz.title ("Opciones Administrador")
-        self.raiz.geometry('600x200')  
+        self.raiz.geometry('600x160')  
 
         #Fuente
         self.fuente = font.Font(weight="bold")
@@ -26,11 +26,11 @@ class Opc:
         self.bt_borrar.place(x = 250, y = 60)
 
         #Boton Chat
-        self.bt_enviar = Button(self.raiz, text="Chat clientes", width=15)
+        self.bt_enviar = Button(self.raiz, text="Chat clientes", width=15, command = self.AbrirChat)
         self.bt_enviar.place(x = 250, y = 90)
 
-        #Boton Control
-        self.bt_enviar = Button(self.raiz, text="Control clientes", width=15)
+        #Boton Salir
+        self.bt_enviar = Button(self.raiz, text="Salir", width=15, command = self.Salir)
         self.bt_enviar.place(x = 250, y = 120)
 
         self.raiz.mainloop()
@@ -39,6 +39,16 @@ class Opc:
         from mant_Clientes import Directorio_C
         self.raiz.destroy()
         Directorio_C()
+    
+    def AbrirChat(self):
+        from Admin_Socket import Chat_C
+        self.raiz.destroy()
+        Chat_C() 
+    
+    def Salir(self):
+        from Entrada_adm import Main
+        self.raiz.destroy()
+        Main()
 
 def main():
     Opc()
