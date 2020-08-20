@@ -9,7 +9,7 @@ class Main:
 
         #Pantalla
         self.raiz = Tk()
-        self.raiz.title ("Acceso a los Clientes")
+        self.raiz.title ("Acceso Administrador")
         self.raiz.geometry('600x200')  
 
         #Fuente
@@ -18,7 +18,7 @@ class Main:
         self.pasw = StringVar()
    
         #Titulo 
-        self.lb_tituloPantalla = Label(self.raiz, text = "ACCESO DEL LOS CLIENTES", font = self.fuente)
+        self.lb_tituloPantalla = Label(self.raiz, text = "ACCESO DEL ADMINISTRADOR", font = self.fuente)
         self.lb_tituloPantalla.place(x = 180, y = 20)
 
         #User
@@ -35,16 +35,20 @@ class Main:
 
         #Boton Limpiar
         self.bt_borrar = Button(self.raiz, text="Limpiar", width=15, command = self.Limpiar)
-        self.bt_borrar.place(x = 190, y = 130)
+        self.bt_borrar.place(x = 110, y = 130)
 
         #Boton Acceder
         self.bt_enviar = Button(self.raiz, text="Acceder", width=15, command = self.Acceder)
-        self.bt_enviar.place(x = 310, y = 130)
+        self.bt_enviar.place(x = 230, y = 130)
+
+        #Boton Salir
+        self.bt_enviar = Button(self.raiz, text="Salir", width=15, command = self.Salir)
+        self.bt_enviar.place(x = 350, y = 130) 
 
         self.raiz.mainloop()
 
     def Acceder(self):
-        if(self.user.get() == "Cliente" and self.pasw.get() == "p34"):
+        if(self.user.get() == "admin" and self.pasw.get() == "123"):
             from Opc_adm import Opc
             self.raiz.destroy()
             Opc()
@@ -54,6 +58,9 @@ class Main:
     def Limpiar(self):
         self.user.set("")
         self.pasw.set("")
+    
+    def Salir(self):
+        self.raiz.destroy()
 
 def main():
     Main()
