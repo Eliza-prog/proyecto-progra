@@ -27,9 +27,9 @@ class Articulo_ProveedorBO:
                         cursor.execute(insertSQL, insertValores) 
                         self.db.commit()
                     else:
-                        raise Exception('El articulo indicado en el formulario existe en la base de datos')
+                        raise Exception('El articulo indicado en el formulario NO existe en la base de datos')
                 else: 
-                    raise Exception('El Proveedor indicado en el formulario existe en la base de datos')   
+                    raise Exception('El Proveedor indicado en el formulario NO existe en la base de datos')   
             else:
                 raise Exception('Los datos no fueron digitados por favor validar la información')  # si no tiene todos los valores de genera un error
         except mysql.connector.Error as e:
@@ -122,7 +122,7 @@ class Articulo_ProveedorBO:
                             conexion.NOM_PROV.set("")
                             conexion.NOM_ART.set("")
                         else:
-                            raise Exception('El articulo indicado en el formulario existe en la base de datos')
+                            raise Exception('El articulo indicado en el formulario NO existe en la base de datos')
                     else: 
                         raise Exception('El Proveedor indicado en el formulario NO existe en la base de datos')   
                 else:
