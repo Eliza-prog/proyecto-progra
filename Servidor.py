@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 from socket import AF_INET, socket, SOCK_STREAM #socket 
 from threading import Thread #hilos
+from tkinter import * #tkinter
+from tkinter import font #fuentes
+from tkinter import messagebox as msg 
+from tkinter import ttk
+import tkinter #tkinter
 
 #acepta coneciones 
 def acep_conexiones():
@@ -41,11 +46,9 @@ def cliente_en_llamada(client):  # Cliente como argulento / para un solo cliente
             envio_masa(bytes("%s ha dejado en chat." % nombre, "utf8")) #les avisa que el usuario o cliente dejo el chat
             break
 
-
 def envio_masa(msg, prefix=""):  # El prefijo es para la identificación del nombre
     for sock in clientes: #para los clientes dentro del arreglo clientes 
         sock.send(bytes(prefix, "utf8")+msg) #mandarles el mensaje 
-
         
 clientes = {} #arreglo clientes 
 direcciones = {} #arreglo direcciones (conexion)
