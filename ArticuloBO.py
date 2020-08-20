@@ -6,7 +6,7 @@ class ArticuloBO:
         #Conexión con la base de datos
         self.db = mysql.connector.connect(host ="localhost", 
                                      user = "root", 
-                                     password = "annyanneko", 
+                                     password = "", 
                                      db ="mydb")
 
     #destruccion del objeto
@@ -19,8 +19,8 @@ class ArticuloBO:
             if(self.validar(articulo)):
                 if(not self.exist(articulo)):  
                     #insertar el articulo
-                    insertSQL = "INSERT INTO articulo (`PK_idarticulo`, `Nombre`, `Cantidad`, `Descripcion`, `Precio`) VALUES (%s, %s, %s, %s, CURDATE())"
-                    insertValores =  (articulo.PK_ID_ART.get(),articulo.Nombre_C.get(),articulo.Cantidad.get(),articulo.Descripcion.get(),articulo.Precio.get())
+                    insertSQL = "INSERT INTO articulo (`PK_idarticulo`, `Nombre`, `Cantidad`, `Descripcion`, `Precio`) VALUES (%s, %s, %s, %s, %s)"
+                    insertValores =  (articulo.PK_ID_ART.get(),articulo.NOMBRE.get(),articulo.CANT_EXI.get(),articulo.DESCRIPCION.get(),articulo.PRECIO_UN.get())
                     print(insertValores)
                     cursor = self.db.cursor() 
                     cursor.execute(insertSQL, insertValores) 
@@ -57,8 +57,8 @@ class ArticuloBO:
             if(self.validar(articulo)):
                 if(self.exist(articulo)): 
                     #modifivca articulo
-                    updateSQL = "UPDATE articulo set `Nombre` = %s, `Cantidad` = %s, `Descrpcion` = %s, `Precio` = %s = CURDATE() WHERE `PK_ID_ART` =  %s"
-                    updateValores =  (articulo.Nombre.get(),articulo.Cantidad.get(),articulo.Descripcion.get(),articulo.Precio.get(),articulo.PK_ID_ART.get())
+                    updateSQL = "UPDATE articulo set `Nombre` = %s, `Cantidad` = %s, `Descrpcion` = %s, `Precio` = %s WHERE `PK_ID_ART` =  %s"
+                    updateValores =  (articulo.NOMBRE.get(),articulo.CANT_EXI.get(),articulo.DESCRIPCION.get(),articulo.PRECIO_UN.get(),articulo.PK_ID_ART.get())
                     print(updateValores)
                     cursor = self.db.cursor() 
                     cursor.execute(updateSQL, updateValores) 
@@ -119,10 +119,10 @@ class ArticuloBO:
             #Metodo obtiene un solo registro o none si no existe información
             if (articuloDB) : 
                 articulo.PK_ID_ART.set(articuloDB[0]),
-                articulo.Nombre.set(articuloDB[1])
-                articulo.Cantidad.set(articuloDB[2])
-                articulo.Descripcion.set(articuloDB[3])
-                articulo.Precio.set(articuloDB[4])
+                articulo.NOMBRE.set(articuloDB[1])
+                articulo.CANT_EXI.set(articuloDB[2])
+                articulo.DESCRIPCION.set(articuloDB[3])
+                articulo.PRECIO_UN.set(articuloDB[4])
             else:
                 raise Exception("El articulo consultado no existe en la base de datos") 
             
@@ -138,16 +138,16 @@ class ArticuloBO:
         if articulo.PK_ID_ART.get() == "" :
             valido = False
         
-        if articulo.Nombre.get() == "" :
+        if articulo.NOMBRE.get() == "" :
             valido = False
 
-        if articulo.Cantidad.get() == "" :
+        if articulo.CANT_EXI.get() == "" :
             valido = False
 
-        if articulo.Descripcion.get() == "" :
+        if articulo.DESCRIPCION.get() == "" :
             valido = False
 
-        if articulo.Precio.get() == "" :
+        if articulo.PRECIO_UN.get() == "" :
             valido = False
 
         return valido
