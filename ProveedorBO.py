@@ -6,7 +6,7 @@ class ProveedorBO:
         #Conexión con la base de datos
         self.db = mysql.connector.connect(host ="localhost", 
                                      user = "root", 
-                                     password = "annyanneko", 
+                                     password = "", 
                                      db ="mydb")
 
     #destruccion del objeto
